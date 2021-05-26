@@ -1,54 +1,16 @@
 package vtlp;
 
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Token;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static vtlp.ProducesTokens.producesTokens;
 import static vtlp.VTLLexer.*;
 
+// Test cases from: https://velocity.apache.org/engine/1.7/user-guide.html#variables
 public class VTLLexerTests {
-
-  private static void dump(String source) {
-    VTLLexer lexer = new VTLLexer(CharStreams.fromString(source));
-    CommonTokenStream tokens = new CommonTokenStream(lexer);
-    tokens.fill();
-
-    for (Token t : tokens.getTokens()) {
-      System.out.printf("%-20s '%s'\n",
-          VTLLexer.VOCABULARY.getSymbolicName(t.getType()),
-          t.getText());
-    }
-  }
-
-  private static List<Token> tokens(String source) {
-    VTLLexer lexer = new VTLLexer(CharStreams.fromString(source));
-    CommonTokenStream tokens = new CommonTokenStream(lexer);
-    tokens.fill();
-
-    // Discard EOF
-    return tokens.getTokens().subList(0, tokens.size() - 1);
-  }
-
-  private static List<Integer> tokenTypes(String source) {
-    VTLLexer lexer = new VTLLexer(CharStreams.fromString(source));
-    CommonTokenStream tokens = new CommonTokenStream(lexer);
-    tokens.fill();
-
-    return tokens.getTokens().stream().map(Token::getType).collect(Collectors.toList());
-  }
-
-//  @Test
-//  public void dump() {
-//    String source = "#set($foo.bar[1] = 3)";
-//    dump(source);
-//  }
 
   @Test
   @SuppressWarnings("unchecked")
@@ -62,17 +24,7 @@ public class VTLLexerTests {
     };
 
     for (Object[] testCase : tests) {
-      String source = (String)testCase[0];
-      List<Token> tokens = tokens(source);
-      List<Integer> types = tokens.stream().map(Token::getType).collect(Collectors.toList());
-      List<Integer> expectedTypes = (List<Integer>)testCase[1];
-
-      String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-          source,
-          expectedTypes.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-          types.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
-
-      assertThat(message, types, equalTo(expectedTypes));
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
     }
   }
 
@@ -85,17 +37,7 @@ public class VTLLexerTests {
     };
 
     for (Object[] testCase : tests) {
-      String source = (String)testCase[0];
-      List<Token> tokens = tokens(source);
-      List<Integer> types = tokens.stream().map(Token::getType).collect(Collectors.toList());
-      List<Integer> expectedTypes = (List<Integer>)testCase[1];
-
-      String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-          source,
-          expectedTypes.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-          types.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
-
-      assertThat(message, types, equalTo(expectedTypes));
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
     }
   }
 
@@ -122,17 +64,7 @@ public class VTLLexerTests {
     };
 
     for (Object[] testCase : tests) {
-      String source = (String)testCase[0];
-      List<Token> tokens = tokens(source);
-      List<Integer> types = tokens.stream().map(Token::getType).collect(Collectors.toList());
-      List<Integer> expectedTypes = (List<Integer>)testCase[1];
-
-      String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-          source,
-          expectedTypes.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-          types.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
-
-      assertThat(message, types, equalTo(expectedTypes));
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
     }
   }
 
@@ -146,17 +78,7 @@ public class VTLLexerTests {
     };
 
     for (Object[] testCase : tests) {
-      String source = (String)testCase[0];
-      List<Token> tokens = tokens(source);
-      List<Integer> types = tokens.stream().map(Token::getType).collect(Collectors.toList());
-      List<Integer> expectedTypes = (List<Integer>)testCase[1];
-
-      String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-          source,
-          expectedTypes.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-          types.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
-
-      assertThat(message, types, equalTo(expectedTypes));
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
     }
   }
 
@@ -173,17 +95,7 @@ public class VTLLexerTests {
     };
 
     for (Object[] testCase : tests) {
-      String source = (String)testCase[0];
-      List<Token> tokens = tokens(source);
-      List<Integer> types = tokens.stream().map(Token::getType).collect(Collectors.toList());
-      List<Integer> expectedTypes = (List<Integer>)testCase[1];
-
-      String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-          source,
-          expectedTypes.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-          types.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
-
-      assertThat(message, types, equalTo(expectedTypes));
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
     }
   }
 
@@ -200,17 +112,7 @@ public class VTLLexerTests {
     };
 
     for (Object[] testCase : tests) {
-      String source = (String)testCase[0];
-      List<Token> tokens = tokens(source);
-      List<Integer> types = tokens.stream().map(Token::getType).collect(Collectors.toList());
-      List<Integer> expectedTypes = (List<Integer>)testCase[1];
-
-      String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-          source,
-          expectedTypes.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-          types.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
-
-      assertThat(message, types, equalTo(expectedTypes));
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
     }
   }
 
@@ -225,17 +127,7 @@ public class VTLLexerTests {
     };
 
     for (Object[] testCase : tests) {
-      String source = (String)testCase[0];
-      List<Token> tokens = tokens(source);
-      List<Integer> types = tokens.stream().map(Token::getType).collect(Collectors.toList());
-      List<Integer> expectedTypes = (List<Integer>)testCase[1];
-
-      String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-          source,
-          expectedTypes.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-          types.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
-
-      assertThat(message, types, equalTo(expectedTypes));
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
     }
   }
 
@@ -248,19 +140,96 @@ public class VTLLexerTests {
     };
 
     for (Object[] testCase : tests) {
-      String source = (String)testCase[0];
-      List<Token> tokens = tokens(source);
-      List<Integer> types = tokens.stream().map(Token::getType).collect(Collectors.toList());
-      List<Integer> expectedTypes = (List<Integer>)testCase[1];
-
-      String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-          source,
-          expectedTypes.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-          types.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
-
-      assertThat(message, types, equalTo(expectedTypes));
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
     }
   }
 
-  // TODO: https://velocity.apache.org/engine/1.7/user-guide.html#variables
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testForeach() {
+    Object[][] tests = {
+        { "#foreach($item in $foo)#end",
+            Arrays.asList(FOREACH, REFERENCE, K_IN, REFERENCE, CPAR, END) },
+    };
+
+    for (Object[] testCase : tests) {
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testIf() {
+    Object[][] tests = {
+        { "#if ($foo)#end", Arrays.asList(IF, REFERENCE, CPAR, END) },
+        { "#if ( ! $foo)#end", Arrays.asList(IF, EXCL, REFERENCE, CPAR, END) },
+        { "#if ($foo && $foo.bar)#end", Arrays.asList(IF, REFERENCE, AND, REFERENCE, DOT, ID, CPAR, END) },
+        { "#if ($foo && $foo == \"bar\")#end", Arrays.asList(IF, REFERENCE, AND, REFERENCE, EQ, STRING, CPAR, END) },
+        { "#{if} ($foo1 || $foo2)#{end}", Arrays.asList(IF, REFERENCE, OR, REFERENCE, CPAR, END) },
+    };
+
+    for (Object[] testCase : tests) {
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testCodeKeywords() {
+    Object[][] tests = {
+        { "#set( { 'k': { 'k2': 123 } } )", Arrays.asList(SET, OBRACE, STRING, COLON, OBRACE, STRING, COLON, INTEGER, CBRACE, CBRACE, CPAR) },
+    };
+
+    for (Object[] testCase : tests) {
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testMap() {
+    Object[][] tests = {
+        { "#if(null in)#end", Arrays.asList(IF, K_NULL, K_IN, CPAR, END) },
+    };
+
+    for (Object[] testCase : tests) {
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testNestedExpressions() {
+    Object[][] tests = {
+        { "#if(((1+2)/3)==1)#end", Arrays.asList(IF, OPAR, OPAR, INTEGER, ADD, INTEGER, CPAR, DIV, INTEGER, CPAR, EQ, INTEGER, CPAR, END) },
+    };
+
+    for (Object[] testCase : tests) {
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testDots() {
+    Object[][] tests = {
+        { "#set(123 1.2 .3 4. .. 9..10)", Arrays.asList(SET, INTEGER, FLOAT, FLOAT, FLOAT, RANGE, INTEGER, RANGE, INTEGER, CPAR) },
+    };
+
+    for (Object[] testCase : tests) {
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testImmediateHash() {
+    Object[][] tests = {
+        { "$a.b#if(true)#end", Arrays.asList(DOLLAR, ID, DOT, ID, HASH, IF, K_TRUE, CPAR, END) },
+    };
+
+    for (Object[] testCase : tests) {
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
+    }
+  }
 }
