@@ -8,7 +8,7 @@ tokens {
   OPAR, CPAR, OBRACK, CBRACK, OBRACE, CBRACE, STRING, INTEGER, ID, REFERENCE, DOT, COMMA, ASSIGN, EQ, NE, AND, OR,
   K_NULL, ADD, SUB, MUL, DIV, MOD, COLON, FLOAT, RANGE, LT, LE, GT, GE, EXCL, K_LT, K_LE, K_GT, K_GE, K_EQ, K_NE,
   K_TRUE, K_FALSE, K_AND, K_OR, K_NOT, K_NULL, K_IN, HASH, IF, ELSEIF, ELSE, FOREACH, SET, END, BREAK, MACRO_ID, MACRO,
-  STOP
+  STOP, INCLUDE, EVALUATE, PARSE, DEFINE
 }
 
 ESCAPED_CHAR
@@ -101,13 +101,21 @@ DIR_ELSE
  : ( 'else' | '{else}' ) -> type(ELSE), popMode
  ;
 
-// #include( "one.txt" )
+DIR_INCLUDE
+ : ( 'include' | '{include}' ) SPACES? '(' -> type(INCLUDE), popMode, pushMode(CODE_)
+ ;
 
-// #parse( "me.vm" )
+DIR_PARSE
+ : ( 'parse' | '{parse}' ) SPACES? '(' -> type(PARSE), popMode, pushMode(CODE_)
+ ;
 
-// #evaluate($dynamicsource)
+DIR_EVALUATE
+ : ( 'evaluate' | '{evaluate}' ) SPACES? '(' -> type(EVALUATE), popMode, pushMode(CODE_)
+ ;
 
-// #define( $block )
+DIR_DEFINE
+ : ( 'define' | '{define}' ) SPACES? '(' -> type(DEFINE), popMode, pushMode(CODE_)
+ ;
 
 DIR_STOP
  : ( 'stop' | '{stop}' ) -> type(STOP), popMode

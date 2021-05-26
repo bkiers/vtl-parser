@@ -49,6 +49,10 @@ directive
  | foreach_directive
  | break_directive
  | macro_directive
+ | parse_directive
+ | define_directive
+ | include_directive
+ | evaluate_directive
  | macro_call_directive
  | custom_directive
  ;
@@ -93,6 +97,22 @@ custom_directive
 
 macro_directive
  : HASH MACRO expression* CPAR block end
+ ;
+
+parse_directive
+ : HASH PARSE expression* CPAR
+ ;
+
+define_directive
+ : HASH DEFINE expression* CPAR block end
+ ;
+
+include_directive
+ : HASH INCLUDE expression* CPAR
+ ;
+
+evaluate_directive
+ : HASH EVALUATE expression* CPAR
  ;
 
 macro_call_directive
