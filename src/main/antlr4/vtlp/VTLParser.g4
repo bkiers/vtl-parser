@@ -30,9 +30,9 @@ formal
  ;
 
 variable
- : DOLLAR id
- | DOLLAR_EXCL id
- | REFERENCE
+ : DOLLAR id DOT?
+ | DOLLAR_EXCL id DOT?
+ | REFERENCE DOT?
  ;
 
 property_or_method
@@ -48,6 +48,7 @@ directive
  | if_directive
  | foreach_directive
  | break_directive
+ | stop_directive
  | macro_directive
  | parse_directive
  | define_directive
@@ -91,6 +92,10 @@ break_directive
  : HASH BREAK
  ;
 
+stop_directive
+ : HASH STOP
+ ;
+
 custom_directive
  : HASH ID ( expression* CPAR )? ( block end )?
  ;
@@ -100,19 +105,19 @@ macro_directive
  ;
 
 parse_directive
- : HASH PARSE expression* CPAR
+ : HASH PARSE expression CPAR
  ;
 
 define_directive
- : HASH DEFINE expression* CPAR block end
+ : HASH DEFINE expression CPAR block end
  ;
 
 include_directive
- : HASH INCLUDE expression* CPAR
+ : HASH INCLUDE expressions CPAR
  ;
 
 evaluate_directive
- : HASH EVALUATE expression* CPAR
+ : HASH EVALUATE expression CPAR
  ;
 
 macro_call_directive
