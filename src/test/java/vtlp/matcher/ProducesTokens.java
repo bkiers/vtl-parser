@@ -1,4 +1,4 @@
-package vtlp;
+package vtlp.matcher;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.Token;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import vtlp.VTLLexer;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,10 +40,17 @@ public class ProducesTokens extends TypeSafeMatcher<String> {
 
   @Override
   public void describeTo(Description description) {
-    String message = String.format("Failed: %s\nExpected : %s\nGot      : %s",
-        source,
-        this.expected.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
-        this.actual.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
+    String message = String.format("  %s",
+        this.expected.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()));
+
+    description.appendText(message);
+  }
+
+  @Override
+  protected void describeMismatchSafely(String item, Description description) {
+    String message = String.format("  %s\nFor input   %s",
+        this.actual.stream().map(VOCABULARY::getSymbolicName).collect(Collectors.toList()),
+        this.source);
 
     description.appendText(message);
   }
