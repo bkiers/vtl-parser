@@ -22,3 +22,6 @@ ParseTree root = parser.parse();
 
 ...
 ```
+
+and/or look at the [unit tests](https://github.com/bkiers/vtl-parser/tree/master/src/test/java/vtlp) 
+to see how it can be used.
