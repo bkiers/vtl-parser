@@ -104,11 +104,11 @@ public class VTLLexerTest {
   public void testAssignIndexNotation() {
     Object[][] tests = {
         { "#set($foo[0] = 1)",
-            Arrays.asList(HASH, SET, REFERENCE, OBRACK, INTEGER, CBRACK, ASSIGN, INTEGER, CPAR) },
+            Arrays.asList(SET, REFERENCE, OBRACK, INTEGER, CBRACK, ASSIGN, INTEGER, CPAR) },
         { "#set($foo.bar[1] = 3)",
-            Arrays.asList(HASH, SET, REFERENCE, DOT, ID, OBRACK, INTEGER, CBRACK, ASSIGN, INTEGER, CPAR) },
+            Arrays.asList(SET, REFERENCE, DOT, ID, OBRACK, INTEGER, CBRACK, ASSIGN, INTEGER, CPAR) },
         { "#set($map[\"apple\"] = \"orange\")",
-            Arrays.asList(HASH, SET, REFERENCE, OBRACK, STRING, CBRACK, ASSIGN, STRING, CPAR) },
+            Arrays.asList(SET, REFERENCE, OBRACK, STRING, CBRACK, ASSIGN, STRING, CPAR) },
     };
 
     for (Object[] testCase : tests) {
@@ -149,7 +149,7 @@ public class VTLLexerTest {
   public void testForeach() {
     Object[][] tests = {
         { "#foreach($item in $foo)#end",
-            Arrays.asList(HASH, FOREACH, REFERENCE, K_IN, REFERENCE, CPAR, HASH, END) },
+            Arrays.asList(FOREACH, REFERENCE, K_IN, REFERENCE, CPAR, END) },
     };
 
     for (Object[] testCase : tests) {
@@ -161,11 +161,11 @@ public class VTLLexerTest {
   @SuppressWarnings("unchecked")
   public void testIf() {
     Object[][] tests = {
-        { "#if ($foo)#end", Arrays.asList(HASH, IF, REFERENCE, CPAR, HASH, END) },
-        { "#if ( ! $foo)#end", Arrays.asList(HASH, IF, EXCL, REFERENCE, CPAR, HASH, END) },
-        { "#if ($foo && $foo.bar)#end", Arrays.asList(HASH, IF, REFERENCE, AND, REFERENCE, DOT, ID, CPAR, HASH, END) },
-        { "#if ($foo && $foo == \"bar\")#end", Arrays.asList(HASH, IF, REFERENCE, AND, REFERENCE, EQ, STRING, CPAR, HASH, END) },
-        { "#{if} ($foo1 || $foo2)#{end}", Arrays.asList(HASH, IF, REFERENCE, OR, REFERENCE, CPAR, HASH, END) },
+        { "#if ($foo)#end", Arrays.asList(IF, REFERENCE, CPAR, END) },
+        { "#if ( ! $foo)#end", Arrays.asList(IF, EXCL, REFERENCE, CPAR, END) },
+        { "#if ($foo && $foo.bar)#end", Arrays.asList(IF, REFERENCE, AND, REFERENCE, DOT, ID, CPAR, END) },
+        { "#if ($foo && $foo == \"bar\")#end", Arrays.asList(IF, REFERENCE, AND, REFERENCE, EQ, STRING, CPAR, END) },
+        { "#{if} ($foo1 || $foo2)#{end}", Arrays.asList(IF, REFERENCE, OR, REFERENCE, CPAR, END) },
     };
 
     for (Object[] testCase : tests) {
@@ -177,7 +177,7 @@ public class VTLLexerTest {
   @SuppressWarnings("unchecked")
   public void testCodeKeywords() {
     Object[][] tests = {
-        { "#set( { 'k': { 'k2': 123 } } )", Arrays.asList(HASH, SET, OBRACE, STRING, COLON, OBRACE, STRING, COLON, INTEGER, CBRACE, CBRACE, CPAR) },
+        { "#set( { 'k': { 'k2': 123 } } )", Arrays.asList(SET, OBRACE, STRING, COLON, OBRACE, STRING, COLON, INTEGER, CBRACE, CBRACE, CPAR) },
     };
 
     for (Object[] testCase : tests) {
@@ -189,7 +189,7 @@ public class VTLLexerTest {
   @SuppressWarnings("unchecked")
   public void testMap() {
     Object[][] tests = {
-        { "#if(null in)#end", Arrays.asList(HASH, IF, K_NULL, K_IN, CPAR, HASH, END) },
+        { "#if(null in)#end", Arrays.asList(IF, K_NULL, K_IN, CPAR, END) },
     };
 
     for (Object[] testCase : tests) {
@@ -201,7 +201,7 @@ public class VTLLexerTest {
   @SuppressWarnings("unchecked")
   public void testNestedExpressions() {
     Object[][] tests = {
-        { "#if(((1+2)/3)==1)#end", Arrays.asList(HASH, IF, OPAR, OPAR, INTEGER, ADD, INTEGER, CPAR, DIV, INTEGER, CPAR, EQ, INTEGER, CPAR, HASH, END) },
+        { "#if(((1+2)/3)==1)#end", Arrays.asList(IF, OPAR, OPAR, INTEGER, ADD, INTEGER, CPAR, DIV, INTEGER, CPAR, EQ, INTEGER, CPAR, END) },
     };
 
     for (Object[] testCase : tests) {
@@ -213,7 +213,7 @@ public class VTLLexerTest {
   @SuppressWarnings("unchecked")
   public void testDots() {
     Object[][] tests = {
-        { "#set(123 1.2 .3 4. .. 9..10)", Arrays.asList(HASH, SET, INTEGER, FLOAT, FLOAT, FLOAT, RANGE, INTEGER, RANGE, INTEGER, CPAR) },
+        { "#set(123 1.2 .3 4. .. 9..10)", Arrays.asList(SET, INTEGER, FLOAT, FLOAT, FLOAT, RANGE, INTEGER, RANGE, INTEGER, CPAR) },
     };
 
     for (Object[] testCase : tests) {
@@ -223,9 +223,24 @@ public class VTLLexerTest {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void testImmediateHash() {
+  public void testImmediateIf() {
     Object[][] tests = {
-        { "$a.b#if(true)#end", Arrays.asList(DOLLAR, ID, DOT, ID, HASH, IF, K_TRUE, CPAR, HASH, END) },
+        { "$a.b#if(true)#end", Arrays.asList(DOLLAR, ID, DOT, ID, IF, K_TRUE, CPAR, END) },
+    };
+
+    for (Object[] testCase : tests) {
+      assertThat((String)testCase[0], producesTokens((List<Integer>)testCase[1]));
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testImmediateComment() {
+    Object[][] tests = {
+        { "$a#* should be a comment *#", Arrays.asList(DOLLAR, ID) },
+        { "$a#** should be a comment *#", Arrays.asList(DOLLAR, ID, VTL_COMMENT_BLOCK) },
+        { "$a## should be a comment", Arrays.asList(DOLLAR, ID) },
+        { "$a#[[ should be a single token ]]#", Arrays.asList(DOLLAR, ID, ESCAPED_BLOCK) },
     };
 
     for (Object[] testCase : tests) {

@@ -1,13 +1,9 @@
 lexer grammar VTLLexer;
 
-// TODO: '|'
-// TODO: '\\'
-// TODO: '$\\...'
-
 tokens {
   OPAR, CPAR, OBRACK, CBRACK, OBRACE, CBRACE, STRING, INTEGER, ID, REFERENCE, DOT, COMMA, ASSIGN, EQ, NE, AND, OR,
   K_NULL, ADD, SUB, MUL, DIV, MOD, COLON, FLOAT, RANGE, LT, LE, GT, GE, EXCL, K_LT, K_LE, K_GT, K_GE, K_EQ, K_NE,
-  K_TRUE, K_FALSE, K_AND, K_OR, K_NOT, K_NULL, K_IN, HASH, IF, ELSEIF, ELSE, FOREACH, SET, END, BREAK, MACRO_ID, MACRO,
+  K_TRUE, K_FALSE, K_AND, K_OR, K_NOT, K_NULL, K_IN, IF, ELSEIF, ELSE, FOREACH, SET, END, BREAK, MACRO_ID, MACRO,
   STOP, INCLUDE, EVALUATE, PARSE, DEFINE
 }
 
@@ -15,32 +11,16 @@ ESCAPED_CHAR
  : '\\' .
  ;
 
-ESCAPED_BLOCK
- : '#[[' .*? ']]#' // TODO moce to DIR_?
- ;
-
-SNGLE_LINE_COMMENT
- : '##' ~[\r\n]* -> skip // TODO moce to DIR_?
- ;
-
-VTL_COMMENT_BLOCK
- : '#**' .*? '*#' -> channel(HIDDEN) // TODO moce to DIR_?
- ;
-
-MULTI_LINE_COMMENT
- : '#*' .*? '*#' -> skip // TODO moce to DIR_?
- ;
-
 START_DIRECTIVE
- : '#' -> type(HASH), pushMode(DIR_)
+ : '#' -> skip, pushMode(DIR_)
  ;
 
 DOLLAR_EXCL_OBRACE
- : '$' '\\'* '!{' -> pushMode(FRM_) // TODO moce to FRM_?
+ : '$' '\\'* '!{' -> pushMode(FRM_)
  ;
 
 DOLLAR_OBRACE
- : '$' '{' -> pushMode(FRM_) // TODO moce to FRM_?
+ : '$' '{' -> pushMode(FRM_)
  ;
 
 DOLLAR_EXCL
@@ -80,6 +60,22 @@ FRM_CBRACE
 
 // Directive mode
 mode DIR_;
+
+ESCAPED_BLOCK
+ : '[[' .*? ']]#' -> popMode
+ ;
+
+SNGLE_LINE_COMMENT
+ : '#' ~[\r\n]* -> skip , popMode
+ ;
+
+VTL_COMMENT_BLOCK
+ : '**' .*? '*#' -> channel(HIDDEN), popMode
+ ;
+
+MULTI_LINE_COMMENT
+ : '*' .*? '*#' -> skip, popMode
+ ;
 
 DIR_SET
  : ( 'set' | '{set}' ) SPACES? '(' -> type(SET), popMode, pushMode(CODE_)
@@ -165,7 +161,7 @@ VAR_DOLLAR_OBRACE
  ;
 
 VAR_HASH
- : '#' -> type(HASH), popMode, pushMode(DIR_)
+ : '#' -> skip, popMode, pushMode(DIR_)
  ;
 
 VAR_ID
